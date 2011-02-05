@@ -26,32 +26,55 @@
 
 
 	// Public properties
+
+
 	// Public methods
 
 	Stringifier.format = function(format, data){
-		var formatted_string = format, m_chunk, value;
-
+		var formatted_string = format, m_chunk, value, specifier_function, index = 0;
+//console.info('Stringifier.format()')
+//console.info('format: ',format)
 		// Support arbitrary number of arguments for data instead of an array
 		if(arguments.length > Stringifier.format.length || !data.pop){
 			data = Array.prototype.slice.call(arguments).slice(1);
 		}
+//console.info('data: ',data)
 
 		// Parse format string
 		while((m_chunk = format_parser.exec(format)) !== null){
+
+			// Grab current value, convert based on specifier
+			value = data[index++] || '';
+			specifier_function = specifier_function_map[m_chunk[2]];
+			value = specifier_function.call(Stringifier, value);
+
 			// Interpolate data
-			value = data[m_chunk[1] - 1] || '';
 			formatted_string = formatted_string.replace(m_chunk[0], value);
 		}
 
 		return formatted_string;
 	};
 
+
+	// Private methods
+	var
+		_spec_integer = function(input){
+			return parseInt(input);
+		},
+		_spec_string = function(input){
+			return input.toString();
+		}
+	;
+
 	// Private properties
 	var
-		format_parser = /%[^%]*([0-9]+)/gi
+		format_parser = /%([0-9]*)([cdieEfgGosuxXpn%]+)/g,
+		specifier_function_map = {
+			'd': _spec_integer,
+			'i': _spec_integer,
+			's': _spec_string,
+		}
 	;
-	// Private methods
-
 
 	// Expose in globals
 	window.Stringifier = window.S = Stringifier;

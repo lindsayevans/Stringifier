@@ -8,16 +8,22 @@ $(function() {
 
 
   test('Argument types', function() {
-    equals(S('START %1 END', 'one'), 'START one END', 'single data value');
-    equals(S('START %1 %2, %3 END', 'one', 'two', 'three'), 'START one two, three END', 'arbitrary arguments');
+    equals(S('START %s END', 'one'), 'START one END', 'single data value');
+    equals(S('START %s %s %s END', 'one', 'two', 'three'), 'START one two three END', 'arbitrary arguments');
+    equals(S('START %s %s %s END', ['one','two','three']), 'START one two three END', 'array of data values');
   });
 
-  test('Basic formatting', function() {
+
+  test('Specifier types', function() {
+    equals(S('START %s %s %s END', 'one', 'two', 'three'), 'START one two three END', 'string specifier');
+    equals(S('START %d %i %d END', 100, 200, 300), 'START 100 200 300 END', 'decimal & integer specifier');
+  });
+/*
+  test('Basic formatting - numbered arguments', function() {
     equals(S('START %1 %2, %3 END', ['one','two','three']), 'START one two, three END', 'ordered positioning');
     equals(S('START %1 %3, %2 END', ['one','two','three']), 'START one three, two END', 'unordered positioning');
     equals(S('START %1 [%4] END', ['one','two','three']), 'START one [] END', 'empty string for undefined value');
-    //equals(S('%1 %%1 %2, %3', ['one','two','three']), 'one %1 two, three', 'format escaping');
   });
-
+*/
 });
 
