@@ -29,11 +29,21 @@
 	// Public methods
 
 	Stringifier.format = function(format, data){
-		var formatted_string = '';
+		var formatted_string = format, data = data.slice ? data : [data], m_chunk;
+
+		// Parse format string
+		while((m_chunk = format_parser.exec(format)) !== null){
+			// Interpolate data
+			formatted_string = formatted_string.replace(m_chunk[0], data[m_chunk[1]-1]);
+		}
+
 		return formatted_string;
 	};
 
 	// Private properties
+	var
+		format_parser = /%[^%]*([0-9]+)/gi
+	;
 	// Private methods
 
 
