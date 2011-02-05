@@ -11,7 +11,7 @@
 (function(window){
 
 	var Stringifier = function(){
-		//return Stringifier.test(q);
+		return Stringifier.format.apply(Stringifier, arguments);
 	};
 
 	// Metadata
@@ -29,12 +29,18 @@
 	// Public methods
 
 	Stringifier.format = function(format, data){
-		var formatted_string = format, data = data.slice ? data : [data], m_chunk;
+		var formatted_string = format, m_chunk, value;
+
+		// Support arbitrary number of arguments for data instead of an array
+		if(arguments.length > Stringifier.format.length || !data.pop){
+			data = Array.prototype.slice.call(arguments).slice(1);
+		}
 
 		// Parse format string
 		while((m_chunk = format_parser.exec(format)) !== null){
 			// Interpolate data
-			formatted_string = formatted_string.replace(m_chunk[0], data[m_chunk[1]-1]);
+			value = data[m_chunk[1] - 1] || '';
+			formatted_string = formatted_string.replace(m_chunk[0], value);
 		}
 
 		return formatted_string;
