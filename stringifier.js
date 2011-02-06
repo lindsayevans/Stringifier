@@ -44,7 +44,7 @@
 		while((m_chunk = format_parser.exec(format)) !== null){
 
 			// Grab current value, convert based on specifier
-			specifier = m_chunk[2];
+			specifier = m_chunk[5];
 			value = data[index++] || '';
 			specifier_function = specifier_function_map[specifier];
 			value = specifier_function.call(Stringifier, value, specifier);
@@ -104,7 +104,8 @@
 
 	// Private properties
 	var
-		format_parser = /%([0-9]*)([cdieEfgGosuxXpn%]+)/g,
+		// %[flags][width][.precision][length]specifier
+		format_parser = /%([-+ #0]*)([0-9*]*)(?:\.?([0-9*]*))([hlL]?)([cdieEfgGosuxXpn%]{1})/g,
 		specifier_function_map = {
 			'c': _spec_character,
 			'd': _spec_integer,
