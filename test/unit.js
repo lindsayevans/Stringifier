@@ -23,8 +23,8 @@ $(function() {
     equals(S('START %o %o END', 42, 255), 'START 052 377 END', 'octal specifier');
     equals(S('START %s %s %s END', 'one', 'two', 'three'), 'START one two three END', 'string specifier');
     equals(S('START %u %u %u END', 42, 255, -100), 'START 42 255 100 END', 'unsigned decimal specifier');
-    equals(S('START %x %x END', 42, 255), 'START 2a ff END', 'unsigned hexidecimal specifier');
-    equals(S('START %X %X END', 42, 255), 'START 2A FF END', 'unsigned hexidecimal specifier (uppercase)');
+    equals(S('START %x %x END', 42, 255), 'START 2a ff END', 'unsigned hexadecimal specifier');
+    equals(S('START %X %X END', 42, 255), 'START 2A FF END', 'unsigned hexadecimal specifier (uppercase)');
     equals(S('START %p END', S), 'START  END', 'pointer specifier');
     equals(S('START %n END', 'nothing'), 'START  END', 'nothing specifier');
     equals(S('START %% %s END', 'whatevs'), 'START % whatevs END', 'percent specifier (escape sequence)');

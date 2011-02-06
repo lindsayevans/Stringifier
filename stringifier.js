@@ -87,7 +87,7 @@
 		_spec_string = function(input){
 			return input.toString();
 		},
-		_spec_hexidecimal = function(input, specifier){
+		_spec_hexadecimal = function(input, specifier){
 			var result = (input).toString(16);
 			return specifier === 'x' ? result.toLowerCase() : result.toUpperCase();
 		},
@@ -117,8 +117,8 @@
 			'o': _spec_octal,
 			's': _spec_string,
 			'u': _spec_integer,
-			'x': _spec_hexidecimal,
-			'X': _spec_hexidecimal,
+			'x': _spec_hexadecimal,
+			'X': _spec_hexadecimal,
 			'p': _spec_pointer,
 			'n': _spec_nothing,
 			'%': _spec_percent
