@@ -66,8 +66,9 @@
 		_spec_character = function(input){
 			return input.toString()[0];
 		},
-		_spec_integer = function(input){
-			return parseInt(input).toString();
+		_spec_integer = function(input, specifier){
+			var result = specifier === 'u' ? Math.abs(input) : input;
+			return parseInt(result).toString();
 		},
 		_spec_scientific = function(input, specifier){
 			var result = input.toExponential().toString();
