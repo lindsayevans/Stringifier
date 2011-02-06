@@ -31,7 +31,7 @@
 	// Public methods
 
 	Stringifier.format = function(format, data){
-		var formatted_string = format, m_chunk, value, specifier, specifier_function, index = 0;
+		var formatted_string = format, m_chunk, value, specifier, flags, width, precision, length, specifier_function, index = 0;
 //console.info('Stringifier.format()')
 //console.info('format: ',format)
 		// Support arbitrary number of arguments for data instead of an array
@@ -45,9 +45,16 @@
 
 			// Grab current value, convert based on specifier
 			specifier = m_chunk[5];
+			flags = m_chunk[1];
+			width = m_chunk[2];
+			precision = m_chunk[3];
+			length = m_chunk[4];
 			value = data[index++] || '';
+//console.log(value, flags, width, precision, length, specifier)
 			specifier_function = specifier_function_map[specifier];
+
 			value = specifier_function.call(Stringifier, value, specifier);
+			value = apply_flags(value, flags, width, precision, length, specifier);
 
 			if(specifier === '%'){
 				index--;
@@ -63,6 +70,56 @@
 
 	// Private methods
 	var
+		apply_flags = function(value, flags, width, precision, length, specifier){
+			var pad_char = ' ';
+
+			if(flags.indexOf('0') !== -1){
+				pad_char = '0';
+			}
+			if(flags.indexOf('-') !== -1 && width > 0 && value.length < width){
+				return left_pad(value, width - value.length, pad_char);
+			}else if(width > 0 && value.length < width){
+				return right_pad(value, width - value.length, pad_char);
+			}
+
+			if(flags.indexOf('+') !== -1){
+				return value > 0 ? '+' + value : value;
+			}
+
+			if(flags.indexOf(' ') !== -1){
+				return value > 0 ? ' ' + value : value;
+			}
+
+			if(flags.indexOf('#') !== -1){
+				if(specifier === 'o' && parseInt(value, 8) > 0){
+					return left_pad(value, 3 - value.length, '0');
+				}
+				if(specifier === 'x' && parseInt(value, 16) > 0){
+					return '0x' + value;
+				}
+				if(specifier === 'X' && parseInt(value, 16) > 0){
+					return '0X' + value;
+				}				
+			}
+
+
+			return value;
+
+		},
+		left_pad = function(value, amount, character){
+			var result = '';
+			while(amount--){
+				result += character;
+			}
+			return result + value;
+		},
+		right_pad = function(value, amount, character){
+			var result = value;
+			while(amount--){
+				result += character;
+			}
+			return result;
+		},
 		_spec_character = function(input){
 			return input.toString()[0];
 		},
@@ -82,7 +139,7 @@
 		},
 		_spec_octal = function(input){
 			var result = (input).toString(8);
-			return result.length === 3 ? result : '0' + result;
+			return result;
 		},
 		_spec_string = function(input){
 			return input.toString();
