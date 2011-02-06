@@ -31,7 +31,7 @@
 	// Public methods
 
 	Stringifier.format = function(format, data){
-		var formatted_string = format, m_chunk, value, specifier_function, index = 0;
+		var formatted_string = format, m_chunk, value, specifier, specifier_function, index = 0;
 //console.info('Stringifier.format()')
 //console.info('format: ',format)
 		// Support arbitrary number of arguments for data instead of an array
@@ -44,9 +44,14 @@
 		while((m_chunk = format_parser.exec(format)) !== null){
 
 			// Grab current value, convert based on specifier
+			specifier = m_chunk[2];
 			value = data[index++] || '';
-			specifier_function = specifier_function_map[m_chunk[2]];
-			value = specifier_function.call(Stringifier, value);
+			specifier_function = specifier_function_map[specifier];
+			value = specifier_function.call(Stringifier, value, specifier);
+
+			if(specifier === '%'){
+				index--;
+			}
 
 			// Interpolate data
 			formatted_string = formatted_string.replace(m_chunk[0], value);
@@ -58,11 +63,41 @@
 
 	// Private methods
 	var
+		_spec_character = function(input){
+			return input.toString()[0];
+		},
 		_spec_integer = function(input){
-			return parseInt(input);
+			return parseInt(input).toString();
+		},
+		_spec_scientific = function(input, specifier){
+			var result = input.toExponential().toString();
+			return specifier === 'e' ? result.toLowerCase() : result.toUpperCase();
+		},
+		_spec_float = function(input, specifier){
+			var result = parseFloat(input).toString(),
+					e = _spec_scientific(input, specifier === 'g' ? 'e' : 'E')
+			;
+			return e.length < result.length ? e : result;
+		},
+		_spec_octal = function(input){
+			var result = (input).toString(8);
+			return result.length === 3 ? result : '0' + result;
 		},
 		_spec_string = function(input){
 			return input.toString();
+		},
+		_spec_hexidecimal = function(input, specifier){
+			var result = (input).toString(16);
+			return specifier === 'x' ? result.toLowerCase() : result.toUpperCase();
+		},
+		_spec_pointer = function(input){
+			return '';
+		},
+		_spec_nothing = function(){
+			return '';
+		},
+		_spec_percent = function(input, specifier){
+			return '%';
 		}
 	;
 
@@ -70,9 +105,22 @@
 	var
 		format_parser = /%([0-9]*)([cdieEfgGosuxXpn%]+)/g,
 		specifier_function_map = {
+			'c': _spec_character,
 			'd': _spec_integer,
 			'i': _spec_integer,
+			'e': _spec_scientific,
+			'E': _spec_scientific,
+			'f': _spec_float,
+			'g': _spec_float,
+			'G': _spec_float,
+			'o': _spec_octal,
 			's': _spec_string,
+			'u': _spec_integer,
+			'x': _spec_hexidecimal,
+			'X': _spec_hexidecimal,
+			'p': _spec_pointer,
+			'n': _spec_nothing,
+			'%': _spec_percent
 		}
 	;
 
