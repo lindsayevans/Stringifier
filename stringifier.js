@@ -2,7 +2,7 @@
  * Stringifier 0.0.1a - JavaScript string formatting library
  *
  * Copyright (c) 2011 Lindsay Evans <http://linz.id.au/>
- * Licensed under the MIT <http://www.opensource.org/licenses/mit-license.php)> license.
+ * Licensed under the MIT <http://www.opensource.org/licenses/mit-license.php> license.
  */
 
 /*jslint eqeqeq: true */
