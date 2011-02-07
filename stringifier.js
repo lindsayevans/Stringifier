@@ -11,7 +11,7 @@
 (function(window){
 
 	var Stringifier = function(){
-		return Stringifier.format.apply(Stringifier, arguments);
+		return Stringifier.sprintf.apply(Stringifier, arguments);
 	};
 
 	// Metadata
@@ -30,27 +30,25 @@
 
 	// Public methods
 
-	Stringifier.format = function(format, data){
+	Stringifier.sprintf = function(format, data){
 		var formatted_string = format, m_chunk, value, specifier, flags, width, precision, length, specifier_function, index = 0;
-//console.info('Stringifier.format()')
-//console.info('format: ',format)
+
 		// Support arbitrary number of arguments for data instead of an array
-		if(arguments.length > Stringifier.format.length || !data.pop){
+		if(arguments.length > Stringifier.sprintf.length || !data.pop){
 			data = Array.prototype.slice.call(arguments).slice(1);
 		}
-//console.info('data: ',data)
 
 		// Parse format string
-		while((m_chunk = format_parser.exec(format)) !== null){
+		while((m_chunk = sprintf_format_parser.exec(format)) !== null){
 
-			// Grab current value, convert based on specifier
+			// Grab current value, convert based on specifier & flags
 			specifier = m_chunk[5];
 			flags = m_chunk[1];
 			width = m_chunk[2];
 			precision = m_chunk[3];
 			length = m_chunk[4];
 			value = data[index++] || '';
-//console.log(value, flags, width, precision, length, specifier)
+
 			specifier_function = specifier_function_map[specifier];
 
 			value = specifier_function.call(Stringifier, value, specifier);
@@ -70,6 +68,24 @@
 
 	// Private methods
 	var
+
+		// Utility functions for padding strings
+		left_pad = function(value, amount, character){
+			var result = '';
+			while(amount--){
+				result += character;
+			}
+			return result + value;
+		},
+		right_pad = function(value, amount, character){
+			var result = value;
+			while(amount--){
+				result += character;
+			}
+			return result;
+		},
+
+		// Apply flags for sprintf
 		apply_flags = function(value, flags, width, precision, length, specifier){
 			var pad_char = ' ';
 
@@ -106,20 +122,8 @@
 			return value;
 
 		},
-		left_pad = function(value, amount, character){
-			var result = '';
-			while(amount--){
-				result += character;
-			}
-			return result + value;
-		},
-		right_pad = function(value, amount, character){
-			var result = value;
-			while(amount--){
-				result += character;
-			}
-			return result;
-		},
+
+		// Functions to convert values based on specifiers
 		_spec_character = function(input){
 			return input.toString().charAt(0);
 		},
@@ -161,8 +165,11 @@
 
 	// Private properties
 	var
+		// RegExp to parse an sprintf style format string
 		// %[flags][width][.precision][length]specifier
-		format_parser = /%([-+ #0]*)([0-9*]*)(?:\.?([0-9*]*))([hlL]?)([cdieEfgGosuxXpn%]{1})/g,
+		sprintf_format_parser = /%([-+ #0]*)([0-9*]*)(?:\.?([0-9*]*))([hlL]?)([cdieEfgGosuxXpn%]{1})/g,
+
+		// Map sprintf specifiers to functions
 		specifier_function_map = {
 			'c': _spec_character,
 			'd': _spec_integer,

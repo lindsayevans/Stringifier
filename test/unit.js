@@ -1,13 +1,16 @@
 $(function() {
 
+	module('sprintf()');
+
   test('Argument types', function() {
+		expect(3);
     equals(S('START %s END', 'one'), 'START one END', 'single data value');
     equals(S('START %s %s %s END', 'one', 'two', 'three'), 'START one two three END', 'arbitrary arguments');
     equals(S('START %s %s %s END', ['one','two','three']), 'START one two three END', 'array of data values');
   });
 
-
   test('Specifier types', function() {
+		expect(13);
     equals(S('START %c %c %c END', 'one', 'two', 'three'), 'START o t t END', 'character specifier');
     equals(S('START %d %i %d END', 100, 200, -300), 'START 100 200 -300 END', 'decimal & integer specifier');
     equals(S('START %e %E END', 3.9265e+2, 3.9265e+2), 'START 3.9265e+2 3.9265E+2 END', 'scientific notation specifiers');
@@ -24,18 +27,16 @@ $(function() {
   });
 
   test('Flags', function() {
+		expect(9);
     equals(S('START %5f %5f %5f %5f END', 1, -1, -392.65, 392.65), 'START 1     -1    -392.65 392.65 END', 'left justification');
     equals(S('START %-5f %-5f %-5f %-5f END', 1, -1, -392.65, 392.65), 'START     1    -1 -392.65 392.65 END', 'right justification');
     equals(S('START %05f %05f %05f %05f END', 1, -1, -392.65, 392.65), 'START 10000 -1000 -392.65 392.65 END', 'left zero justification');
     equals(S('START %-05f %-05f %-05f %-05f END', 1, -1, -392.65, 392.65), 'START 00001 000-1 -392.65 392.65 END', 'right zero justification');
     equals(S('START %+f %+f END', -392.65, 392.65), 'START -392.65 +392.65 END', 'preceding plus/minus flag');
     equals(S('START % f % f END', -392.65, 392.65), 'START -392.65  392.65 END', 'preceding space flag');
-
     equals(S('START %#o %#o END', 42, 255), 'START 052 377 END', 'octal preceding zero flag');
     equals(S('START %#x %#x END', 42, 255), 'START 0x2a 0xff END', 'hexadecimal preceding zero flag');
     equals(S('START %#X %#X END', 42, 255), 'START 0X2A 0XFF END', 'hexadecimal preceding zero flag (uppercase)');
-
-
 	});
 /*
   test('Basic formatting - numbered arguments', function() {
