@@ -1,12 +1,5 @@
 $(function() {
 
-
-  test('The basics', function() {
-    equals(S.name, 'Stringifier', 'meta name');
-    equals(S.version, '0.0.1a', 'meta version');
-  });
-
-
   test('Argument types', function() {
     equals(S('START %s END', 'one'), 'START one END', 'single data value');
     equals(S('START %s %s %s END', 'one', 'two', 'three'), 'START one two three END', 'arbitrary arguments');
