@@ -121,7 +121,7 @@
 			return result;
 		},
 		_spec_character = function(input){
-			return input.toString()[0];
+			return input.toString().charAt(0);
 		},
 		_spec_integer = function(input, specifier){
 			var result = specifier === 'u' ? Math.abs(input) : input;
