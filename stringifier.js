@@ -11,6 +11,7 @@
 (function(window){
 
 	var Stringifier = function(){
+		// This is likely to change at some point, so I wouldn't rely on it
 		return Stringifier.sprintf.apply(Stringifier, arguments);
 	};
 
@@ -30,6 +31,13 @@
 
 	// Public methods
 
+	// Implementation of the C vsprintf() function
+	// Our sprintf() can handle an array, so we just pass it on
+	Stringifier.vsprintf = function(format){
+		return Stringifier.sprintf.apply(Stringifier, arguments);
+	};
+
+	// Implementation of the C sprintf() function
 	Stringifier.sprintf = function(format, data){
 		var formatted_string = format, m_chunk, value, specifier, flags, width, precision, length, specifier_function, index = 0;
 
