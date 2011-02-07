@@ -2,7 +2,7 @@
 ## JavaScript string formatting library
 
 Currently only (partially) does sprintf().
-Check [test/unit.js](test/unit.js) for examples of what it currently does.
+Check [test/unit.js](./blob/master/test/unit.js) for examples of what it currently does.
 
 ## TODO
 - Fully implement sprintf()
