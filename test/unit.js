@@ -38,6 +38,13 @@ $(function() {
     equals(S('START %#x %#x END', 42, 255), 'START 0x2a 0xff END', 'hexadecimal preceding zero flag');
     equals(S('START %#X %#X END', 42, 255), 'START 0X2A 0XFF END', 'hexadecimal preceding zero flag (uppercase)');
 	});
+
+/*
+  test('Currency', function() {
+		equals(S('START %01.2f %01.2f END', 100.1, 100), 'START 100.10 100.00 END', 'currency');
+	});
+*/
+
 /*
   test('Basic formatting - numbered arguments', function() {
     equals(S('START %1 %2, %3 END', ['one','two','three']), 'START one two, three END', 'ordered positioning');
