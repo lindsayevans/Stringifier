@@ -41,6 +41,11 @@
 	Stringifier.sprintf = function(format, data){
 		var formatted_string = format, m_chunk, value, specifier, flags, width, precision, length, specifier_function, index = 0;
 
+		// Only a format was passed in, just return it
+		if(arguments.length === 1){
+			return format;
+		}
+
 		// Support arbitrary number of arguments for data instead of an array
 		if(arguments.length > Stringifier.sprintf.length || !data.pop){
 			data = Array.prototype.slice.call(arguments).slice(1);
