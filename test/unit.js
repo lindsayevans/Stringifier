@@ -135,23 +135,19 @@ test("Flag: (space)",function(t){
 
 			t_eq("\x7f", S("%c", 0x7f));
 
-			var error = false;
 			try {
 				S("%c", -100);
 			}catch(e){
 				t_eq("invalid character code passed to %c in sprintf", e.message);
-				error = true;
 			}
-			t.t(error);
 
-			error = false;
+
 			try {
 				S("%c", 0x200000);
 			}catch(e){
 				t_eq("invalid character code passed to %c in sprintf", e.message);
-				error = true;
 			}
-			t.t(error);
+
   });
   test("Mapping",function(t){
 
@@ -170,7 +166,7 @@ test("Flag: (space)",function(t){
 				t_eq("got 1 printf arguments, insufficient for '%2$*s'", e.message);
 				error = true;
 			}
-			t.t(error);
+
 
 			// %(map)s format
 			t_eq("%(foo", S("%(foo", {}));
@@ -184,34 +180,27 @@ test("Flag: (space)",function(t){
 				crevace: "Pocket"
 			}));
 
-			var error = false;
 			try {
 				S("%(foo)s", 42);
 			}catch(e){
 				t_eq("format requires a mapping", e.message);
-				error = true;
 			}
-			t.t(error);
 
-			error = false;
 			try {
 				S("%(foo)s %(bar)s", "foo", 42);
 			}catch(e){
 				t_eq("format requires a mapping", e.message);
-				error = true;
 			}
-			t.t(error);
 
-			error = false;
+
 			try {
 				S("%(foo)*s", {
 					foo: "Hot Pocket"
 				});
 			}catch(e){
 				t_eq("* width not supported in mapped formats", e.message);
-				error = true;
 			}
-			t.t(error);
+
   });
   test("Positionals",function(t){
 
@@ -221,23 +210,19 @@ test("Flag: (space)",function(t){
 			t_eq("0000003.14", S("%0*.*f", 3.14159265, 10, 2));
 			t_eq("3.14      ", S("%-*.*f", 3.14159265, 10, 2));
 
-			var error = false;
 			try {
 				S("%*s", "foo", "bar");
 			}catch(e){
 				t_eq("the argument for * width at position 2 is not a number in %*s", e.message);
-				error = true;
 			}
-			t.t(error);
 
-			error = false;
+
 			try {
 				S("%10.*f", "foo", 42);
 			}catch(e){
 				t_eq("format argument 'foo' not a float; parseFloat returned NaN", e.message);
-				error = true;
 			}
-			t.t(error);
+
   });
   test("Miscellaneous",function(t) {
 
@@ -249,23 +234,19 @@ test("Flag: (space)",function(t){
 			t_eq('$', S("%c", 36));
 			t_eq("10", S("%d", 10));
 
-			var error = false;
 			try {
 				S("%s%s", 42);
 			}catch(e){
 				t_eq("got 1 printf arguments, insufficient for '%s%s'", e.message);
-				error = true;
 			}
-			t.t(error);
 
-			error = false;
+
 			try {
 				S("%c");
 			}catch(e){
 				t_eq("got 0 printf arguments, insufficient for '%c'", e.message);
-				error = true;
 			}
-			t.t(error);
+
 
 			t_eq("%10", S("%10", 42));
   });
