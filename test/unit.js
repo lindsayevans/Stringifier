@@ -28,10 +28,10 @@ $(function() {
 
   test('Flags', function() {
 		expect(9);
-    equals(S('START %5f %5f %5f %5f END', 1, -1, -392.65, 392.65), 'START 1     -1    -392.65 392.65 END', 'left justification');
-    equals(S('START %-5f %-5f %-5f %-5f END', 1, -1, -392.65, 392.65), 'START     1    -1 -392.65 392.65 END', 'right justification');
-    equals(S('START %05f %05f %05f %05f END', 1, -1, -392.65, 392.65), 'START 10000 -1000 -392.65 392.65 END', 'left zero justification');
-    equals(S('START %-05f %-05f %-05f %-05f END', 1, -1, -392.65, 392.65), 'START 00001 000-1 -392.65 392.65 END', 'right zero justification');
+    equals(S('START %-5f %-5f %-5f %-5f END', 1, -1, -392.65, 392.65), 'START 1     -1    -392.65 392.65 END', 'left justification');
+    equals(S('START %5f %5f %5f %5f END', 1, -1, -392.65, 392.65), 'START     1    -1 -392.65 392.65 END', 'right justification');
+    equals(S('START %-05f %-05f %-05f %-05f END', 1, -1, -392.65, 392.65), 'START 10000 -1000 -392.65 392.65 END', 'left zero justification');
+    equals(S('START %05f %05f %05f %05f END', 1, -1, -392.65, 392.65), 'START 00001 000-1 -392.65 392.65 END', 'right zero justification');
     equals(S('START %+f %+f END', -392.65, 392.65), 'START -392.65 +392.65 END', 'preceding plus/minus flag');
     equals(S('START % f % f END', -392.65, 392.65), 'START -392.65  392.65 END', 'preceding space flag');
     equals(S('START %#o %#o END', 42, 255), 'START 052 377 END', 'octal preceding zero flag');

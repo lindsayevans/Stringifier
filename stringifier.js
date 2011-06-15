@@ -101,9 +101,9 @@
 				pad_char = '0';
 			}
 			if(flags.indexOf('-') !== -1 && width > 0 && value.length < width){
-				return left_pad(value, width - value.length, pad_char);
-			}else if(width > 0 && value.length < width){
 				return right_pad(value, width - value.length, pad_char);
+			}else if(width > 0 && value.length < width){
+				return left_pad(value, width - value.length, pad_char);
 			}
 
 			if(flags.indexOf('+') !== -1){
