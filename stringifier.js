@@ -138,7 +138,11 @@
 
 		// Functions to convert values based on specifiers
 		_spec_character = function(input){
-			return input.toString().charAt(0);
+			if(isNaN(input)){
+				return input.toString().charAt(0);
+			}else{
+				return String.fromCharCode(input);
+			}
 		},
 		_spec_integer = function(input, specifier){
 			var result = specifier === 'u' ? Math.abs(input) : input;
