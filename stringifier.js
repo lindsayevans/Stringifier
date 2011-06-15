@@ -1,3 +1,7 @@
+// ==ClosureCompiler==
+// @compilation_level SIMPLE_OPTIMIZATIONS
+// @output_file_name stringifier.min.js
+// ==/ClosureCompiler==
 /*!
  * Stringifier 0.0.1a - JavaScript string formatting library
  *
