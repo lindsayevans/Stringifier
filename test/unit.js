@@ -52,5 +52,223 @@ $(function() {
     equals(S('START %1 [%4] END', ['one','two','three']), 'START one [] END', 'empty string for undefined value');
   });
 */
+
+
+  
+module('sprintf() - Dojo tests');
+
+function t_eq(a,b){
+	return equals(b,a);
+}
+
+test("Flag: (space)",function(t){
+
+
+			t_eq(" 42", S("% d", 42));
+			t_eq("-42", S("% d", -42));
+			t_eq("   42", S("% 5d", 42));
+			t_eq("  -42", S("% 5d", -42));
+			t_eq("             42", S("% 15d", 42));
+			t_eq("            -42", S("% 15d", -42));
+  });
+  test("Flag: +",function(t){
+
+
+			t_eq("+42", S("%+d", 42));
+			t_eq("-42", S("%+d", -42));
+			t_eq("  +42", S("%+5d", 42));
+			t_eq("  -42", S("%+5d", -42));
+			t_eq("            +42", S("%+15d", 42));
+			t_eq("            -42", S("%+15d", -42));
+  });
+  test("Flag: 0",function(t){
+
+
+			t_eq("42", S("%0d", 42));
+			t_eq("-42", S("%0d", -42));
+			t_eq("00042", S("%05d", 42));
+			t_eq("00-42", S("%05d", -42));
+			t_eq("000000000000042", S("%015d", 42));
+			t_eq("000000000000-42", S("%015d", -42));
+  });
+  test("Flag: -",function(t){
+
+
+			t_eq("42", S("%-d", 42));
+			t_eq("-42", S("%-d", -42));
+			t_eq("42   ", S("%-5d", 42));
+			t_eq("-42  ", S("%-5d", -42));
+			t_eq("42             ", S("%-15d", 42));
+			t_eq("-42            ", S("%-15d", -42));
+
+			t_eq("42", S("%-0d", 42));
+			t_eq("-42", S("%-0d", -42));
+			t_eq("42   ", S("%-05d", 42));
+			t_eq("-42  ", S("%-05d", -42));
+			t_eq("42             ", S("%-015d", 42));
+			t_eq("-42            ", S("%-015d", -42));
+
+			t_eq("42", S("%0-d", 42));
+			t_eq("-42", S("%0-d", -42));
+			t_eq("42   ", S("%0-5d", 42));
+			t_eq("-42  ", S("%0-5d", -42));
+			t_eq("42             ", S("%0-15d", 42));
+			t_eq("-42            ", S("%0-15d", -42));
+  });
+  test("Precision",function(t){
+
+
+			t_eq("42", S("%d", 42.8952));
+			t_eq("42", S("%.2d", 42.8952)); // Note: the %d format is an int
+			t_eq("42", S("%.2i", 42.8952));
+			t_eq("42.90", S("%.2f", 42.8952));
+			t_eq("42.90", S("%.2F", 42.8952));
+			t_eq("42.8952000000", S("%.10f", 42.8952));
+			t_eq("42.90", S("%1.2f", 42.8952));
+			t_eq(" 42.90", S("%6.2f", 42.8952));
+			t_eq("042.90", S("%06.2f", 42.8952));
+			t_eq("+42.90", S("%+6.2f", 42.8952));
+			t_eq("42.8952000000", S("%5.10f", 42.8952));
+  });
+  test("Bases",function(t){
+
+
+			t_eq("\x7f", S("%c", 0x7f));
+
+			var error = false;
+			try {
+				S("%c", -100);
+			}catch(e){
+				t_eq("invalid character code passed to %c in sprintf", e.message);
+				error = true;
+			}
+			t.t(error);
+
+			error = false;
+			try {
+				S("%c", 0x200000);
+			}catch(e){
+				t_eq("invalid character code passed to %c in sprintf", e.message);
+				error = true;
+			}
+			t.t(error);
+  });
+  test("Mapping",function(t){
+
+
+			// %1$s format
+			t_eq("%1$", S("%1$"));
+			t_eq("%0$s", S("%0$s"));
+			t_eq("Hot Pocket", S("%1$s %2$s", "Hot", "Pocket"));
+			t_eq("12.0 Hot Pockets", S("%1$.1f %2$s %3$ss", 12, "Hot", "Pocket"));
+			t_eq(" 42", S("%1$*.f", "42", 3));
+
+			error = false;
+			try {
+				S("%2$*s", "Hot Pocket");
+			}catch(e){
+				t_eq("got 1 printf arguments, insufficient for '%2$*s'", e.message);
+				error = true;
+			}
+			t.t(error);
+
+			// %(map)s format
+			t_eq("%(foo", S("%(foo", {}));
+			t_eq("Hot Pocket", S("%(temperature)s %(crevace)s", {
+				temperature: "Hot",
+				crevace: "Pocket"
+			}));
+			t_eq("12.0 Hot Pockets", S("%(quantity).1f %(temperature)s %(crevace)ss", {
+				quantity: 12,
+				temperature: "Hot",
+				crevace: "Pocket"
+			}));
+
+			var error = false;
+			try {
+				S("%(foo)s", 42);
+			}catch(e){
+				t_eq("format requires a mapping", e.message);
+				error = true;
+			}
+			t.t(error);
+
+			error = false;
+			try {
+				S("%(foo)s %(bar)s", "foo", 42);
+			}catch(e){
+				t_eq("format requires a mapping", e.message);
+				error = true;
+			}
+			t.t(error);
+
+			error = false;
+			try {
+				S("%(foo)*s", {
+					foo: "Hot Pocket"
+				});
+			}catch(e){
+				t_eq("* width not supported in mapped formats", e.message);
+				error = true;
+			}
+			t.t(error);
+  });
+  test("Positionals",function(t){
+
+
+			t_eq(" foo", S("%*s", "foo", 4));
+			t_eq("      3.14", S("%*.*f", 3.14159265, 10, 2));
+			t_eq("0000003.14", S("%0*.*f", 3.14159265, 10, 2));
+			t_eq("3.14      ", S("%-*.*f", 3.14159265, 10, 2));
+
+			var error = false;
+			try {
+				S("%*s", "foo", "bar");
+			}catch(e){
+				t_eq("the argument for * width at position 2 is not a number in %*s", e.message);
+				error = true;
+			}
+			t.t(error);
+
+			error = false;
+			try {
+				S("%10.*f", "foo", 42);
+			}catch(e){
+				t_eq("format argument 'foo' not a float; parseFloat returned NaN", e.message);
+				error = true;
+			}
+			t.t(error);
+  });
+  test("Miscellaneous",function(t) {
+
+
+			t_eq("+hello+", S("+%s+", "hello"));
+			t_eq("+10+", S("+%d+", 10));
+			t_eq("a", S("%c", "a"));
+			t_eq('"', S("%c", 34));
+			t_eq('$', S("%c", 36));
+			t_eq("10", S("%d", 10));
+
+			var error = false;
+			try {
+				S("%s%s", 42);
+			}catch(e){
+				t_eq("got 1 printf arguments, insufficient for '%s%s'", e.message);
+				error = true;
+			}
+			t.t(error);
+
+			error = false;
+			try {
+				S("%c");
+			}catch(e){
+				t_eq("got 0 printf arguments, insufficient for '%c'", e.message);
+				error = true;
+			}
+			t.t(error);
+
+			t_eq("%10", S("%10", 42));
+  });
+
 });
 
