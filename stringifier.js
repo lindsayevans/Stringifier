@@ -20,14 +20,16 @@
 	};
 
 	// Metadata
-	Stringifier.type = 'library';
-	Stringifier.name = 'Stringifier';
-	Stringifier.major_version = 0;
-	Stringifier.minor_version = 0;
-	Stringifier.patch_version = 1;
-	Stringifier.special_version = 'a';
-	Stringifier.version = '0.0.1a';
-	Stringifier.globals = ['Stringifier', 'S'];
+	Stringifier.meta = {
+		type: 'library',
+		name: 'Stringifier',
+		major_version: 0,
+		minor_version: 0,
+		patch_version: 1,
+		special_version: 'a',
+		version: '0.0.1a',
+		globals: ['Stringifier', 'S']
+	};
 
 
 	// Public properties
